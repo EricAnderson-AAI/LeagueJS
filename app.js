@@ -3,10 +3,11 @@
 /*global console*/
 'use strict';
 
-var leagueApi = require('./lolapi');
-leagueApi.init('', 'na');
+var leagueApi = require('./lib/lolapi');
+leagueApi.init('605ed83e-ec74-43b7-9296-ac7160c174a1', 'na');
 
 //All the errors should be null if you pass a valid key
+
 
 leagueApi.getChampions(null, 'na', function (err, champs) {
     if (err) {
