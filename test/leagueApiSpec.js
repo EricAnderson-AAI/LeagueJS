@@ -2,55 +2,59 @@
 /*global require*/
 /*global beforeEach*/
 /*global it*/
+/*global xit*/
 
 describe('League of Legends api wrapper test suite', function () {
-        'use strict';
+    'use strict';
 
 
-        var sinon = require('sinon'),
-            should = require('should'),
-            leagueApi = require('../lib/lolapi');
+    var sinon = require('sinon'),
+        should = require('should'),
+        leagueApi = require('../lib/lolapi'),
+        mockChampionArray = ['Teemo', 'Ahri', 'Vladimir'];
 
 
-        beforeEach(function () {
-            leagueApi.init('605ed83e-ec74-43b7-9296-ac7160c174a1', 'na');
+    beforeEach(function () {
+        leagueApi.init('605ed83e-ec74-43b7-9296-ac7160c174a1', 'na');
+    });
+
+    it('should be able to retrieve all champions', function (done) {
+
+        var leagueApiStub = sinon.mock(leagueApi);
+        console.log(leagueApiStub);
+        leagueApiStub.getChampions(false, 'na', function (err, res) {
+
+            should.not.exist(err);
+            should.exist(res);
+            res.length.should.be.greaterThan(0);
+            done();
         });
+    });
 
-        xit('should be able to retrieve all champions', function (done) {
+    xit('should be able to retrieve all of the free champions', function (done) {
 
+        leagueApi.getChampions(true, 'na', function (err, res) {
 
-            leagueApi.getChampions(null, 'na', function (err, res) {
+            should.not.exist(err);
+            should.exist(res);
+            res.length.should.be.greaterThan(0);
 
-                should.not.exist(err);
-                should.exist(res);
-                res.length.should.be.greaterThan(0);
-                done();
-            });
+            done();
         });
+    });
 
-        xit('should be able to retrieve all of the free champions', function (done) {
+    xit('should throw an error if given the wrong type ', function (done) {
 
-            leagueApi.getChampions(true, 'na', function (err, res) {
+        var errorMock = {
+            type: 'TypeError',
+            method: 'getChampions',
+            message: 'Invalid parameter for freeToPlay'
+        };
+        //league = sinon.stub(leagueApi, 'getChampions').returns(errorMock);
 
-                should.not.exist(err);
-                should.exist(res);
-                res.length.should.be.greaterThan(0);
+        leagueApi.getChampions(null, 'na', function (err, champs) {
 
-                done();
-            });
+            done();
         });
-
-        it('should throw an error if given the wrong type ', function (done) {
-
-            var errorMock = {
-                type: 'TypeError',
-                method: 'getChampions',
-                message: 'Invalid parameter for freeToPlay'
-            };
-            //league = sinon.stub(leagueApi, 'getChampions').returns(errorMock);
-
-            leagueApi.getChampions(null, 'na', function (err, champs) {
-
-                done();
-            });
-        });
+    });
+});
